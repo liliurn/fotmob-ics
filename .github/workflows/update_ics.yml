@@ -1,1 +1,46 @@
+name: Update Fotmob ICS Schedule
+
+on:
+  schedule:
+    # 毎日午前3時 (UTC) に実行 (日本時間だと正午) - 必要に応じて変更
+    - cron: '0 3 * * *'
+  workflow_dispatch: # 手動実行も可能にする
+
+jobs:
+  update_ics:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # リポジトリへの書き込み権限が必要
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x' # 任意のPythonバージョン
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run script to generate ICS file
+      env:
+        # ここにFotmobのURLをカンマ区切りで設定します。
+        # シークレットを使う場合: secrets.FOTMOB_URLS
+        # 直接書く場合 (公開リポジトリでは非推奨):
+        FOTMOB_URLS: "https://www.fotmob.com/teams/8456/overview/manchester-city,https://www.fotmob.com/leagues/47/overview/premier-league"
+      run: python generate_ics.py
+
+    - name: Commit and push ICS file
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "Automated update of fotmob_schedule.ics"
+        file_pattern: fotmob_schedule.ics # コミット対象のファイル
+        commit_user_name: "GitHub Action Bot" # コミットユーザー名
+        commit_user_email: "actions@github.com" # コミットユーザーEmail
+        commit_author: "GitHub Action Bot <actions@github.com>" # コミット作者
+        # push_options: '--force' # 必要に応じて強制プッシュ (通常は不要)
 
