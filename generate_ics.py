@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup # HTML解析用
 import json # HTML内のJSONデータをパースするため
 
 # --- 設定 ---
-FOTMOB_URLS_STR = os.environ.get("FOTMOB_URLS", "")
+FOTMOB_URLS_STR = os.environ.get("https://www.fotmob.com/teams/8456/overview/manchester-city", "")
 OUTPUT_ICS_FILE = "fotmob_schedule.ics"
 DEFAULT_EVENT_DURATION_MINUTES = 105
 FETCH_FUTURE_DAYS = 90
