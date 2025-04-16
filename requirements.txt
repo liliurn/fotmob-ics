@@ -1,3 +1,5 @@
 requests
 ics
 pytz
+beautifulsoup4
+lxml
